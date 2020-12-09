@@ -1,3 +1,3 @@
 # DelayRingBuffer
 
-Stereo ring buffer with delay with automatic advancement of write and read header.
+Ring buffer with delay with automatic advancement of write and read header.
