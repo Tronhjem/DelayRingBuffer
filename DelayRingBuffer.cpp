@@ -81,26 +81,28 @@ int DelayRingBuffer::GetSize()
 // Set read head buffer position
 void DelayRingBuffer::SetReadHeadPosition(int index)
 {
-	mReadHead = index;
-	// wrap back around to the end.
-	if (mReadHead < 0)
-		mReadHead += mSizeInSamples;
+	if (index < mSizeInSamples && index > 0)
+		mReadHead = index;
 }
 
-// Sets delay in miliseconds.
+// Calculates delay in samples and sets delay.
 void DelayRingBuffer::SetDelayInMilliSeconds(float delay)
 {
 	float delayInSamples = (delay / 1000) * (float)mSampleRate;
 	SetDelayInSamples(delayInSamples);
 }
 
+// Sets delay in miliseconds, and saves interpolation.
 void DelayRingBuffer::SetDelayInSamples(float delay)
 {
 	float readHeadPrecise = mWriteHead - delay;
 	int roundedHead = (int)readHeadPrecise;
 	mLerpValue = readHeadPrecise - roundedHead;
 
-	SetReadHeadPosition(roundedHead);
+	mReadHead = roundedHead;
+	// wrap back around to the end.
+	if (mReadHead < 0)
+		mReadHead += mSizeInSamples;
 }
 
 float DelayRingBuffer::interpolate(float v0, float v1, float t)
