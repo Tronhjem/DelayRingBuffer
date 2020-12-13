@@ -57,7 +57,7 @@ float DelayRingBuffer::GetSampleAtReadHead()
 	if (mLerpValue > 0)
 	{
 		float v1 = mBuffer[index];
-		float v2 = mBuffer[(index + 1) % mSizeInSamples];
+		float v2 = mBuffer[mReadHead % mSizeInSamples];
 		return interpolate(v1, v2, mLerpValue);
 	}
 	else
@@ -82,28 +82,28 @@ int DelayRingBuffer::GetSize()
 void DelayRingBuffer::SetReadHeadPosition(int index)
 {
 	mReadHead = index;
-}
-
-// Sets delay in miliseconds.
-void DelayRingBuffer::SetDelayInMilliSeconds(float delay)
-{
-	float delayInSamples = (delay / 1000) * mSampleRate;
-	float readHeadPrecise = mWriteHead - delayInSamples;
-	int roundedHead = (int)readHeadPrecise;
-	mLerpValue = readHeadPrecise - roundedHead;
-	
-	SetDelayInSamples(roundedHead);
-}
-
-void DelayRingBuffer::SetDelayInSamples(int delay)
-{
-	mReadHead = delay;
 	// wrap back around to the end.
 	if (mReadHead < 0)
 		mReadHead += mSizeInSamples;
 }
 
-float DelayRingBuffer::interpolate(int v0, int v1, float t)
+// Sets delay in miliseconds.
+void DelayRingBuffer::SetDelayInMilliSeconds(float delay)
+{
+	float delayInSamples = (delay / 1000) * (float)mSampleRate;
+	SetDelayInSamples(delayInSamples);
+}
+
+void DelayRingBuffer::SetDelayInSamples(float delay)
+{
+	float readHeadPrecise = mWriteHead - delay;
+	int roundedHead = (int)readHeadPrecise;
+	mLerpValue = readHeadPrecise - roundedHead;
+
+	SetReadHeadPosition(roundedHead);
+}
+
+float DelayRingBuffer::interpolate(float v0, float v1, float t)
 {
 	return v0 + t * (v1 - v0);
 }

@@ -24,10 +24,10 @@ public:
 	int GetSize();
 	void SetReadHeadPosition(int index);
     void SetDelayInMilliSeconds(float delay);
+	void SetDelayInSamples(float delay);
 
 private:
-    float interpolate(int v0, int v1, float t);
-	void SetDelayInSamples(int delay);
+    float interpolate(float v0, float v1, float t);
 	int mSizeInSamples;	
 	int mWriteHead = 0;
 	int mReadHead = 0;
