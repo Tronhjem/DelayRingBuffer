@@ -3,7 +3,7 @@
 // Overwrites existing data in the buffer.
 void DelayRingBuffer::WriteDataBlock(short size, const float* in_dataStart)
 {
-	for (size_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		WriteSample(in_dataStart[i]);
 	}
@@ -12,7 +12,7 @@ void DelayRingBuffer::WriteDataBlock(short size, const float* in_dataStart)
 // Adds data to existing data in the buffer.
 void DelayRingBuffer::AddDataBlock(short size, const float* in_dataStart)
 {
-	for (size_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		AddSample(in_dataStart[i]);
 	}
@@ -67,7 +67,7 @@ float DelayRingBuffer::GetSampleAtReadHead()
 // Get Sample block, starting from read head. Advances head equal to size.
 void DelayRingBuffer::GetDataBlock(short size, float* out_data)
 {
-	for (size_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		out_data[i] = GetSampleAtReadHead();
 	}
